@@ -75,9 +75,9 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
 | --------- |
 | Mean curvature (Avg-Hexagram, N=20) |
 
-![torus H](images/torus-H-AvgHexagram-20-s.png =x300)
-![torus V1](images/torus-V1-AvgHexagram-20-s.png =x300)
-![torus V2](images/torus-V2-AvgHexagram-20-s.png =x300)
+|![torus H](images/torus-H-AvgHexagram-20-s.png) | ![torus V1](images/torus-V1-AvgHexagram-20-s.png) | ![torus V2](images/torus-V2-AvgHexagram-20-s.png) |
+| ---- | ---- | ---- |
+| Mean curvature on torus (N=10000, N=20) | First principal direction | Second principal direction |
 
 
 
