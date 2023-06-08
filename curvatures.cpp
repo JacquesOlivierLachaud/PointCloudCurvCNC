@@ -507,7 +507,11 @@ void myCallback()
 {
   ImGui::Text("Generated input data");
   ImGui::SameLine();
-  ImGui::Checkbox("Fast Render", &FastRenderMode );  
+  if ( ImGui::Checkbox("Fast Render", &FastRenderMode ) )
+    ptCloud->setPointRenderMode( FastRenderMode
+				 ? polyscope::PointRenderMode::Quad
+				 : polyscope::PointRenderMode::Sphere );
+
   ImGui::SliderInt("number of points", &number_of_points, 1000, 1000000 );
   ImGui::SliderFloat("radius R", &radius_R, 0.0, 1.0);
   ImGui::SliderFloat("radius r", &radius_r, 0.0, 1.0);
@@ -521,13 +525,14 @@ void myCallback()
   ImGui::SameLine();
   if (ImGui::Button("Dodecahedron")) doGenerateDodecahedron();
   ImGui::SameLine();
-  if (ImGui::Button("Obj"))    doGenerateFromFile();
+  if (ImGui::Button("InputFile"))    doGenerateFromFile();
   ImGui::Text("CNC Curvatures estimation");
   ImGui::SliderInt("#nearest neighbors (k-nn)", &k_nn, 3, 100);
   ImGui::SliderInt("max triangles in ball", &maxtriangles, 1, 1000);
   if ( ImGui::RadioButton( "Uniform",
                            method == GenerationMethod::UniformGeneration) )
     method = GenerationMethod::UniformGeneration;
+  ImGui::SameLine();
   if ( ImGui::RadioButton( "Independent",
                            method == GenerationMethod::IndependentGeneration ) )
     method = GenerationMethod::IndependentGeneration;
