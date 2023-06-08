@@ -1,3 +1,3 @@
 ## Main dependencies
-include(recipes/eigen)
+include(recipes/eigen-adobe)
 include(recipes/polyscope)
