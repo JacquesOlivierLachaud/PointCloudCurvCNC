@@ -356,17 +356,24 @@ public:
         M( j, k ) += coef_N * N[ j ] * N[ k ];
     
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigensolver(M);
-    if (eigensolver.info() != Eigen::Success) abort();
-    
-    // SelfAdjointEigenSolver returns sorted eigenvalues, no
-    // need to reorder the eigenvectors.
-    assert(eigensolver.eigenvalues()(0) <= eigensolver.eigenvalues()(1) );
-    assert(eigensolver.eigenvalues()(1) <= eigensolver.eigenvalues()(2) );    
-    Eigen::Vector3d v1 = eigensolver.eigenvectors().col(0);
-    Eigen::Vector3d v2 = eigensolver.eigenvectors().col(1);
-    return std::make_tuple( -eigensolver.eigenvalues()(0),
-                            -eigensolver.eigenvalues()(1),
-                            v1,v2 );
+    if (eigensolver.info() == Eigen::Success)
+      {
+	// SelfAdjointEigenSolver returns sorted eigenvalues, no
+	// need to reorder the eigenvectors.
+	assert(eigensolver.eigenvalues()(0) <= eigensolver.eigenvalues()(1) );
+	assert(eigensolver.eigenvalues()(1) <= eigensolver.eigenvalues()(2) );    
+	Eigen::Vector3d v1 = eigensolver.eigenvectors().col(0);
+	Eigen::Vector3d v2 = eigensolver.eigenvectors().col(1);
+	return std::make_tuple( -eigensolver.eigenvalues()(0),
+				-eigensolver.eigenvalues()(1),
+				v1,v2 );
+      }
+    else
+      {
+	std::cerr << "Incorrect diagonalization for tensor " << M << std::endl;
+	Eigen::Vector3d v1, v2;
+	return std::make_tuple( 0.0, 0.0, v1,v2 );
+      }
   }
 
   /// @}

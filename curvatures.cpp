@@ -111,7 +111,7 @@ void displayCurvatures
   DenseVector K2( nb );
   std::vector< RealVector > V1( nb );
   std::vector< RealVector > V2( nb );
-  double k1, k2;
+  double     k1, k2;
   RealVector v1, v2;
   for ( int i = 0; i < nb; i++ )
     {
@@ -119,11 +119,14 @@ void displayCurvatures
       H[ i ] = ( mA[ i ] == 0.0 ) ? 0.0 : ( mH[ i ] / mA[ i ] );
       G[ i ] = ( mA[ i ] == 0.0 ) ? 0.0 : ( mG[ i ] / mA[ i ] );
       RealTensor T;
-      T <<
-        mT11[ i ], mT12[ i ], mT13[ i ],
-        mT12[ i ], mT22[ i ], mT23[ i ],
-        mT13[ i ], mT23[ i ], mT33[ i ];
-      T /= mA[ i ];
+      if ( mA[ i ] != 0.0 )
+	{
+	  T <<
+	    mT11[ i ], mT12[ i ], mT13[ i ],
+	    mT12[ i ], mT22[ i ], mT23[ i ],
+	    mT13[ i ], mT23[ i ], mT33[ i ];
+	  T /= mA[ i ];
+	}
       std::tie( K1[ i ], K2[ i ], V1[ i ], V2[ i ] ) = 
         CNCEigen::curvaturesFromTensor( T, 1.0, point_normals[ i ] );
     }
@@ -187,7 +190,7 @@ void displayCurvatures
 void doCurvatures()
 {
   if ( point_normals.size() != ptTree.size() ) return;
-  std::cout << "Computing curvatures" << std::endl;
+  std::cout << "Computing curvatures of " << ptTree.size() << " points." << std::endl;
   cnc_computer.init( ptTree, k_nn );
   if ( method == GenerationMethod::IndependentGeneration )
     cnc_computer.chooseIndependentGenerationMethod( maxtriangles );
