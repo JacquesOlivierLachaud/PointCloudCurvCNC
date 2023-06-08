@@ -135,8 +135,8 @@ public:
   /// @return the estimated radius.
   double findRadius( int knn, int nb_tests = 0 ) const
   {
-    RealPoint lo = _points[ _indices.front() ];
-    RealPoint up = _points[ _indices.back() ];
+    Point lo = _points[ _indices.front() ];
+    Point up = _points[ _indices.back() ];
     double diameter = ( up - lo ).norm();
     int   number = 0;
     double sum_rho    = 0.0;
@@ -144,7 +144,7 @@ public:
     const int nb = _points.size();
     if ( nb_tests <= 0 ) nb_tests = (int) ceil( sqrt( _points.size() ) );
     for ( int i = 0; i < nb_tests; i++ ) {
-      RealPoint p = _points[ i % nb ];
+      Point p = _points[ i % nb ];
       double rho = diameter / sqrt( (double) nb );
       do {
 	auto near_points = pointsInBall( p, rho );
@@ -326,7 +326,7 @@ public:
   /// @return its square `x*x`.
   static
   Scalar
-  sqr( Scalar x ) const
+  sqr( Scalar x ) 
   {
     return x * x;
   }
@@ -335,7 +335,7 @@ public:
   /// @return their squared Euclidean distance.
   static
   Scalar
-  distance2( const Point& p, const Point& q ) const
+  distance2( const Point& p, const Point& q ) 
   {
     Scalar sum = 0.0;
     for ( int i = 0; i < dimension; i++ )

@@ -55,7 +55,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 struct CNCEigen {
 
   /// Small constant used to approximate zero.
-  static const double epsilon = 1e-8;
+  static constexpr double epsilon = 1e-8;
 
   /// Represents a triangle on a sphere of radius one.
   struct SphericalTriangle {

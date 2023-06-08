@@ -43,6 +43,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /// Structure to generate the (two) local triangles in case of Hexagram method.
 struct HexagramGeneration {
+  typedef Eigen::Vector3d    RealPoint;
+  typedef Eigen::Vector3d    RealVector;
+  typedef std::size_t        Index;
+  typedef std::vector<Index> Indices;
+  typedef double             Scalar;
+
   Scalar    _avgnormals;
   std::array< Index,   6 > _vertices;
   std::array< Scalar,    6 > _distance2;
@@ -232,6 +238,12 @@ struct HexagramGeneration {
 
 /// Structure to generate the (two) local triangles in case of Averaged Hexagram method.
 struct AvgHexagramGeneration {
+  typedef Eigen::Vector3d    RealPoint;
+  typedef Eigen::Vector3d    RealVector;
+  typedef std::size_t        Index;
+  typedef std::vector<Index> Indices;
+  typedef double             Scalar;
+
   Scalar    _avg_normals_coef;
   std::array< RealPoint, 6 > _targets;
   std::array< RealVector,6 > _avg_normals;
@@ -414,8 +426,8 @@ struct AvgHexagramGeneration {
 
 /// Main class for computing curvature measures on point clouds.
 struct PointCloudCurvatureComputer {
-  typedef Eigen::VectorXd DenseVector;
-  typedef Eigen::MatrixXd DenseMatrix;
+  typedef Eigen::VectorXd  DenseVector;
+  typedef Eigen::MatrixXd  DenseMatrix;
   typedef Eigen::Vector3d  RealPoint;
   typedef Eigen::Vector3d  RealVector;
   typedef Eigen::Matrix3d  RealTensor;
@@ -442,7 +454,7 @@ struct PointCloudCurvatureComputer {
 
   /// Default constructor.
   /// The object is invalid and should be initialized with \ref init.
-  CNCCurvatureComputer()
+  PointCloudCurvatureComputer()
     : _rd(), _rg( _rd() ), _ptr_tree( nullptr ), _knn( 0 ), _best_rho( 0.0 ) {}
 
   /// Initializes the object with the range of points organized in a
@@ -456,7 +468,7 @@ struct PointCloudCurvatureComputer {
   {
     _ptr_tree = &tree;
     _knn      = knn;
-    _best_rho = findRadius( *_ptr_tree, knn, 0 );
+    _best_rho = _ptr_tree->findRadius( knn, 0 );
     resetParameters();
   }
 
@@ -546,6 +558,7 @@ struct PointCloudCurvatureComputer {
   computeCurvatureMeasures( const std::vector< RealVector >  & point_normals )
   {
     const auto nb = _ptr_tree->_points.size();
+    _maxtriangles = std::max( _maxtriangles, 2UL );
     DenseVector A  ( nb ); // area
     DenseVector H  ( nb ); // mean curvatures
     DenseVector G  ( nb ); // Gaussian curvatures
@@ -566,12 +579,18 @@ struct PointCloudCurvatureComputer {
     AvgHexagramGeneration SMTG( _avgnormals );
     bool smtg = ( _method == Method::AvgHexagramGeneration );
     // Compute curvature measures for each point.
+    auto counter = 0;
     for ( auto i : _ptr_tree->_indices )
       {
+	if ( counter >= 499499 ) std::cout << " " << counter << " " << i << std::endl;
+	counter += 1;
+	if ( i >= nb ) std::cerr << "Error" << std::endl;
         // Compute nearest neighbors and common stuff.
         const RealPoint  p = _ptr_tree->_points[ i ];
         auto nearest = _ptr_tree->kNeighborsAtLeast( p, _knn, _best_rho, true );
+	if ( counter >= 499500 ) std::cout << "#nn=" << nearest.size() << std::endl;
         nearest.resize( _knn );
+	if ( counter >= 499500 ) std::cout << "#nn=" << nearest.size() << std::endl;
         
         std::chrono::high_resolution_clock::time_point
 	  t1 = std::chrono::high_resolution_clock::now();
@@ -618,6 +637,7 @@ struct PointCloudCurvatureComputer {
                 nb_vt       += 1;
               }
           }
+	if ( counter >= 499500 ) std::cout << "nb_vt=" << nb_vt << std::endl;
 
         if ( nb_vt == 0 ) std::cerr << "No triangles." << std::endl;
 
@@ -632,15 +652,23 @@ struct PointCloudCurvatureComputer {
             const auto   j = t_j[ t ];
             const auto   k = t_k[ t ];
             const auto   l = t_l[ t ];
-           
+
+	    if ( counter >= 499500 )
+	      std::cout << "j k l" << j << " " << k << " " << l << std::endl;
+	    
             const auto& pj = smtg ? SMTG._avg_points [ t   ] : _ptr_tree->_points[ j ];
             const auto& pk = smtg ? SMTG._avg_points [ t+2 ] : _ptr_tree->_points[ k ];
             const auto& pl = smtg ? SMTG._avg_points [ t+4 ] : _ptr_tree->_points[ l ]; 
             const auto& nj = smtg ? SMTG._avg_normals[ t   ] : point_normals[ j ];
             const auto& nk = smtg ? SMTG._avg_normals[ t+2 ] : point_normals[ k ];
             const auto& nl = smtg ? SMTG._avg_normals[ t+4 ] : point_normals[ l ];
+	    if ( counter >= 499500 ) {
+	      std::cout << "pj pk pl " << pj << " " << pk << " " << pl << std::endl;
+	      std::cout << "nj nk nl " << nj << " " << nk << " " << nl << std::endl;
+	    }
         
             const auto  tA = CNCEigen::mu0InterpolatedU( pj, pk, pl, nj, nk, nl );
+	    if ( counter >= 499500 ) std::cout << "tA = " << tA << std::endl; 
             if ( tA < -CNCEigen::epsilon )
               {
                 localA -= tA;
@@ -667,7 +695,7 @@ struct PointCloudCurvatureComputer {
         T23[ i ] = 0.5 * ( localT( 1, 2 ) + localT( 2, 1 ) );
         T33[ i ] = localT( 2, 2 );
         
-        
+	if ( counter >= 499500 ) std::cout << "Filled vectors at " << i << std::endl;         
         std::chrono::high_resolution_clock::time_point
 	  t2 = std::chrono::high_resolution_clock::now();
         timings.push_back

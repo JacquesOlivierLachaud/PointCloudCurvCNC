@@ -12,7 +12,7 @@ typedef Eigen::MatrixXd  DenseMatrix;
 typedef Eigen::Vector3d  RealPoint;
 typedef Eigen::Vector3d  RealVector;
 typedef Eigen::Matrix3d  RealTensor;
-typedef CNCCurvatureComputer::Method GenerationMethod;
+typedef PointCloudCurvatureComputer::Method GenerationMethod;
 
 // Polyscope visualization handle, to quickly add data to the surface
 polyscope::PointCloud* ptCloud = nullptr;
@@ -39,12 +39,12 @@ float radius_r     = 0.3;
 
 // Main global variables
 PointCloudCurvatureComputer  cnc_computer;
-std::string                  objname;
+std::string                  fname;
 std::vector< RealPoint >     points;
-std::vector< RealPoint >     obj_points;
-std::vector< RealVector >    true_normals;
-LinearKDTree< RealPoint, 3 > ptTree;
 std::vector< RealVector >    point_normals;
+std::vector< RealPoint >     obj_points;
+std::vector< RealVector >    obj_normals;
+LinearKDTree< RealPoint, 3 > ptTree;
 GenerationMethod             method;
 
 // bounding box
@@ -189,19 +189,19 @@ void doCurvatures()
   if ( point_normals.size() != ptTree.size() ) return;
   std::cout << "Computing curvatures" << std::endl;
   cnc_computer.init( ptTree, k_nn );
-  if ( method == GenerationMethod::IndependentRandomGeneration )
-    cnc_computer.chooseIndependentRandomGenerationMethod( maxtriangles );
-  else if ( method == GenerationMethod::StaticTriangleGeneration )
-    cnc_computer.chooseStaticTriangleGenerationMethod( AvgNormalsWeight );
-  else if ( method == GenerationMethod::StaticAveragedTriangleGeneration )
-    cnc_computer.chooseStaticAveragedTriangleGenerationMethod( AvgNormalsWeight );
+  if ( method == GenerationMethod::IndependentGeneration )
+    cnc_computer.chooseIndependentGenerationMethod( maxtriangles );
+  else if ( method == GenerationMethod::HexagramGeneration )
+    cnc_computer.chooseHexagramGenerationMethod( AvgNormalsWeight );
+  else if ( method == GenerationMethod::AvgHexagramGeneration )
+    cnc_computer.chooseAvgHexagramGenerationMethod( AvgNormalsWeight );
   else
-    cnc_computer.chooseUniformRandomGenerationMethod( maxtriangles );
+    cnc_computer.chooseUniformGenerationMethod( maxtriangles );
   
   DenseVector A, H, G, T11, T12, T13, T22, T23, T33;
   std::vector<double> timings_cnc;
   std::tie( A, H, G, T11, T12, T13, T22, T23, T33, timings_cnc) =
-    cnc_computer.computeCurvatureMeasures( point_normals )
+    cnc_computer.computeCurvatureMeasures( point_normals );
   TotalTime = 0.0;
   for ( auto t : timings_cnc ) TotalTime += t;
   TotalTime /= 1e6; // time in ms
@@ -368,19 +368,17 @@ void doGenerateCube()
   ptCloudK1 = nullptr;
   ptCloudK2 = nullptr;
   // generate points
-  std::vector< RealPoint > local_points;
-  std::tie( local_points, true_normals )
+  std::tie( points, point_normals )
     = generateCube( number_of_points, radius_R );
-  local_points = hausdorffPerturbation( local_points, epsilon );
-  true_normals = uniformNormalPerturbation( true_normals, xi );
+  points = hausdorffPerturbation( points, epsilon );
+  point_normals = uniformNormalPerturbation( point_normals, xi );
   if ( ptCloud != nullptr )
     polyscope::removePointCloud( "point cloud" );
-  points = local_points;
   std::cout << "Build k-d-tree ..." << std::endl;
   ptTree.init( points );
   // visualize!
   std::cout << "register point cloud ..." << std::endl;
-  ptCloud = polyscope::registerPointCloud("point cloud", local_points);
+  ptCloud = polyscope::registerPointCloud("point cloud", points);
   ptCloud->setPointRadius( radius_R / 100.0, false );
   ptCloud->setPointRenderMode( FastRenderMode
                                ? polyscope::PointRenderMode::Quad
@@ -396,19 +394,17 @@ void doGenerateDodecahedron()
   ptCloudK1 = nullptr;
   ptCloudK2 = nullptr;
   // generate points
-  std::vector< RealPoint > local_points;
-  std::tie( local_points, true_normals )
+  std::tie( points, point_normals )
     = generateDodecahedron( number_of_points, radius_R );
-  local_points = hausdorffPerturbation( local_points, epsilon );
-  true_normals = uniformNormalPerturbation( true_normals, xi );
+  points = hausdorffPerturbation( points, epsilon );
+  point_normals = uniformNormalPerturbation( point_normals, xi );
   if ( ptCloud != nullptr )
     polyscope::removePointCloud( "point cloud" );
-  points = local_points;
   std::cout << "Build k-d-tree ..." << std::endl;
   ptTree.init( points );
   // visualize!
   std::cout << "register point cloud ..." << std::endl;
-  ptCloud = polyscope::registerPointCloud("point cloud", local_points);
+  ptCloud = polyscope::registerPointCloud("point cloud", points);
   ptCloud->setPointRadius( radius_R / 100.0, false );
   ptCloud->setPointRenderMode( FastRenderMode
                                ? polyscope::PointRenderMode::Quad
@@ -424,19 +420,17 @@ void doGenerateSphere()
   ptCloudK1 = nullptr;
   ptCloudK2 = nullptr;
   // generate points
-  std::vector< RealPoint > local_points;
-  std::tie( local_points, true_normals )
+  std::tie( points, point_normals )
     = generateSphere( number_of_points, radius_R );
-  local_points = hausdorffPerturbation( local_points, epsilon );
-  true_normals = uniformNormalPerturbation( true_normals, xi );
+  points = hausdorffPerturbation( points, epsilon );
+  point_normals = uniformNormalPerturbation( point_normals, xi );
   if ( ptCloud != nullptr )
     polyscope::removePointCloud( "point cloud" );
-  points = local_points;
   std::cout << "Build k-d-tree ..." << std::endl;
   ptTree.init( points );
   // visualize!
   std::cout << "register point cloud ..." << std::endl;
-  ptCloud = polyscope::registerPointCloud("point cloud", local_points);
+  ptCloud = polyscope::registerPointCloud("point cloud", points);
   ptCloud->setPointRadius( radius_R / 100.0, false );
   ptCloud->setPointRenderMode( FastRenderMode
                                ? polyscope::PointRenderMode::Quad
@@ -453,19 +447,17 @@ void doGenerateTorus()
   ptCloudK2 = nullptr;
 
   // generate points
-  std::vector< RealPoint > local_points;
-  std::tie( local_points, true_normals )
+  std::tie( points, point_normals )
     = generateTorus( number_of_points, radius_R, radius_r );
-  local_points = hausdorffPerturbation( local_points, epsilon );
-  true_normals = uniformNormalPerturbation( true_normals, xi );
+  points = hausdorffPerturbation( points, epsilon );
+  point_normals = uniformNormalPerturbation( point_normals, xi );
   if ( ptCloud != nullptr )
     polyscope::removePointCloud( "point cloud" );
-  points = local_points;
   std::cout << "Build k-d-tree ..." << std::endl;
   ptTree.init( points );
   // visualize!
   std::cout << "register point cloud ..." << std::endl;
-  ptCloud = polyscope::registerPointCloud("point cloud", local_points);
+  ptCloud = polyscope::registerPointCloud("point cloud", points);
   ptCloud->setPointRadius( radius_R / 100.0, false );
   ptCloud->setPointRenderMode( FastRenderMode
                                ? polyscope::PointRenderMode::Quad
@@ -474,28 +466,29 @@ void doGenerateTorus()
   std::tie( lowest, uppest ) = computeBoundingBox( points );
 }
 
-void doGenerateFromObj()
+void doGenerateFromFile()
 {
   ptCloudH  = nullptr;
   ptCloudG  = nullptr;
   ptCloudK1 = nullptr;
   ptCloudK2 = nullptr;
-  if ( objname == "" ) return;
-  std::ifstream input( objname );
-  std::vector< RealPoint > local_points;
-  std::tie( obj_points, true_normals )
-    = readOBJAsPointCloud<RealPoint,RealVector>( input );
+  if ( fname == "" ) return;
+  std::ifstream input( fname );
+  std::string extname = fname.substr( fname.find_last_of(".") + 1 );
+  std::tie( obj_points, obj_normals )
+    = extname == "obj"
+    ? readOBJAsPointCloud<RealPoint,RealVector>( input )
+    : readPointCloud<RealPoint,RealVector>     ( input );
   input.close();
-  local_points = hausdorffPerturbation( obj_points, epsilon );
-  true_normals = uniformNormalPerturbation( true_normals, xi );  
+  points = hausdorffPerturbation( obj_points, epsilon );
+  point_normals = uniformNormalPerturbation( obj_normals, xi );  
   if ( ptCloud != nullptr )
     polyscope::removePointCloud( "point cloud" );
-  points = local_points;
   std::cout << "Build k-d-tree ..." << std::endl;
   ptTree.init( points );
   // visualize!
   std::cout << "register point cloud ..." << std::endl;
-  ptCloud = polyscope::registerPointCloud("point cloud", local_points);
+  ptCloud = polyscope::registerPointCloud("point cloud", points);
   ptCloud->setPointRadius( radius_R / 100.0, false );
   ptCloud->setPointRenderMode( FastRenderMode
                                ? polyscope::PointRenderMode::Quad
@@ -525,20 +518,20 @@ void myCallback()
   ImGui::SameLine();
   if (ImGui::Button("Dodecahedron")) doGenerateDodecahedron();
   ImGui::SameLine();
-  if (ImGui::Button("Obj"))    doGenerateFromObj();
+  if (ImGui::Button("Obj"))    doGenerateFromFile();
   ImGui::Text("CNC Curvatures estimation");
   ImGui::SliderInt("#nearest neighbors (k-nn)", &k_nn, 3, 100);
   ImGui::SliderInt("max triangles in ball", &maxtriangles, 1, 1000);
   if ( ImGui::RadioButton( "Uniform",
                            method == GenerationMethod::UniformGeneration) )
-    method = GenerationMethod::UniformRandomGeneration;
+    method = GenerationMethod::UniformGeneration;
   if ( ImGui::RadioButton( "Independent",
                            method == GenerationMethod::IndependentGeneration ) )
-    method = GenerationMethod::IndependentRandomGeneration;
+    method = GenerationMethod::IndependentGeneration;
   ImGui::SameLine();
   if ( ImGui::RadioButton( "Hexagram",
                            method == GenerationMethod::HexagramGeneration ) )
-    method = GenerationMethod::StaticTriangleGeneration;
+    method = GenerationMethod::HexagramGeneration;
   ImGui::SameLine();
   if ( ImGui::RadioButton( "Avg-Hexagram",
                            method == GenerationMethod::AvgHexagramGeneration ) )
@@ -546,7 +539,7 @@ void myCallback()
   ImGui::SliderFloat("Avg normals weight", &AvgNormalsWeight, 0.0f, 1.0f);
   if (ImGui::Button("Curvatures")) doCurvatures(); // either curvatures or octree curvatures
   ImGui::SameLine();
-  ImGui::Text( "Total time=%lf", TotalTime );
+  ImGui::Text( "Total time=%lf ms", TotalTime );
 
   ImGui::Text( "H l2 error = %f, H loo error = %f",
                (double) H_error_l2, (double) H_error_loo );
@@ -567,9 +560,9 @@ int main(int argc, char **argv)
   polyscope::state::userCallback = myCallback;
 
   // Process input file if any
-  objname = argc > 1 ? argv[ 1 ] : "";
-  if ( objname != "" )
-    doGenerateFromObj();
+  fname = argc > 1 ? argv[ 1 ] : "";
+  if ( fname != "" )
+    doGenerateFromFile();
   else
     doGenerateTorus();
 
