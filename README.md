@@ -74,8 +74,8 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
 ![bearded man scan](images/bearded-H-AvgHexagram-20-s.png)
 
 ![torus H](images/torus-H-AvgHexagram-20-s.png)
-![torus V1](images/torus-V1-AvgHexagram-20-s.png)
-![torus V2](images/torus-V2-AvgHexagram-20-s.png)
+[torus V1](images/torus-V1-AvgHexagram-20-s.png)
+[torus V2](images/torus-V2-AvgHexagram-20-s.png)
 
 
 
