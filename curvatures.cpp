@@ -512,9 +512,9 @@ void myCallback()
 				 ? polyscope::PointRenderMode::Quad
 				 : polyscope::PointRenderMode::Sphere );
 
-  ImGui::SliderInt("number of points", &number_of_points, 1000, 1000000 );
-  ImGui::SliderFloat("radius R", &radius_R, 0.0, 1.0);
-  ImGui::SliderFloat("radius r", &radius_r, 0.0, 1.0);
+  ImGui::SliderInt("N (nb of samples)", &number_of_points, 1000, 1000000 );
+  ImGui::SliderFloat("R (big radius)", &radius_R, 0.0, 1.0);
+  ImGui::SliderFloat("r (small radius)", &radius_r, 0.0, 1.0);
   ImGui::SliderFloat("x perturbation", &epsilon, 0.0, 0.2);
   ImGui::SliderFloat("u perturbation", &xi, 0.0, 0.2);
   if (ImGui::Button("Sphere")) doGenerateSphere();
@@ -527,8 +527,8 @@ void myCallback()
   ImGui::SameLine();
   if (ImGui::Button("InputFile"))    doGenerateFromFile();
   ImGui::Text("CNC Curvatures estimation");
-  ImGui::SliderInt("#nearest neighbors (k-nn)", &k_nn, 3, 100);
-  ImGui::SliderInt("max triangles in ball", &maxtriangles, 1, 1000);
+  ImGui::SliderInt("K (#nearest neighbors)", &k_nn, 3, 100);
+  ImGui::SliderInt("T (max triangles)", &maxtriangles, 1, 1000);
   if ( ImGui::RadioButton( "Uniform",
                            method == GenerationMethod::UniformGeneration) )
     method = GenerationMethod::UniformGeneration;
@@ -574,6 +574,8 @@ int main(int argc, char **argv)
   else
     doGenerateTorus();
 
+  method = GenerationMethod::AvgHexagramGeneration;
+  
   // Run polyscope viewer
   polyscope::show();
   
