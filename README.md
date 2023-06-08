@@ -1,4 +1,4 @@
-![teaser](images/teaser.png)
+![teaser](images/teaser-s.png)
 
 # Lightweight Curvature Estimation on Point Clouds with Randomized Corrected Curvature Measures
 
