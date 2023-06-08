@@ -544,7 +544,7 @@ void myCallback()
   if ( ImGui::RadioButton( "Avg-Hexagram",
                            method == GenerationMethod::AvgHexagramGeneration ) )
     method = GenerationMethod::AvgHexagramGeneration;
-  ImGui::SliderFloat("Avg normals weight", &AvgNormalsWeight, 0.0f, 1.0f);
+  ImGui::SliderFloat("W (Avg normals weight)", &AvgNormalsWeight, 0.0f, 1.0f);
   if (ImGui::Button("Curvatures")) doCurvatures(); // either curvatures or octree curvatures
   ImGui::SameLine();
   ImGui::Text( "Total time=%lf ms", TotalTime );

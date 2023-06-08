@@ -1,8 +1,9 @@
 # Lightweight Curvature Estimation on Point Clouds with Randomized Corrected Curvature Measures
 
-This repository provides an example application that implements the curvature estimators on oriented point clouds presented in the paper presented at [Symposium on Geometry Processing 2023, Genova, Italy, July 3-7](https://sgp2023.github.io):
 
-Jacques-Olivier Lachaud, David Coeurjolly, Céline Labart, Pascal Romon, Boris Thibert, **Lightweight Curvature Estimation on Point Clouds with Randomized Corrected Curvature Measures**, to appear in *Comput. Graph. Forum*, 2023.
+This repository provides an example application that implements the curvature estimators on oriented point clouds presented at [Symposium on Geometry Processing 2023, Genova, Italy, July 3-7](https://sgp2023.github.io):
+
+Jacques-Olivier Lachaud, David Coeurjolly, Céline Labart, Pascal Romon, Boris Thibert, **Lightweight Curvature Estimation on Point Clouds with Randomized Corrected Curvature Measures**, *Comput. Graph. Forum*, 42(5), 2023. To appear.
 
 ## Building
 
@@ -55,8 +56,17 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
   - you may toggle between fast display (better when N > 5 millions) or nice display
 
 * Curvature computation
+  - `Curvatures` computes all curvature information (mean, Gaussian, principal curvatures and directions.
+  - parameter `K` is the chosen number of nearest neighbors
+  - parameter `T` is the chosen number of triangles (only for `Uniform` generation)
+  - you may choose for triangle random generation methods among `Uniform`, `Independent`, `Hexagram`, `Avg-Hexagram` (see paper for details)
+  - method `Avg-Hexagram` is the fastest, very accurate while staying robust to noise
+  - parameter `W` balances between the normal to the points and the average normals of its neighbors to define the local sampling plane, 0.5 works well.
 
-
+* Information
+  - the total computation time of curvatures is displayed
+  - l2 and loo errors are displayed for `Sphere` and `Torus` shape.
+  
 ## Examples
 
 ![bearded man scan](images/bearded-H-AvgHexagram-20-s.png)
