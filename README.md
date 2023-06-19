@@ -69,6 +69,24 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
   - the total computation time of curvatures is displayed
   - l2 and loo errors are displayed for `Sphere` and `Torus` shape.
   
+# Replicabe some paper results
+
+We provide additional datasets to be able to reproduce the paper results. To exactly get the paper visaul, for each interested curvature quantity, change polyscope's colormap from `viridis` to  `coolwarm` and use the clamping values given in the following table. 
+To specify the colormap min/max values, just CTRL-Click to the min/max text area for the selected curvature quantities.
+
+
+| Pointcloud | Paper figure | Params | curvature clamping range |
+| -----------| -------------| -------| ---------------- |
+| ` ./curvatures ../data/goursat/goursat_025000.pts` | Fig6 |K=50, L=100 | Mean: [-0.107, 0.345], Gaussian: [-0.034, 0.119] |
+| ` ./curvatures ../data/torus/torus_025000.pts` | supplem Fig2 |K=50, L=100 | Mean: [ 0.125, 0.32], Gaussian: [-0.125, 0.0625] |
+| ` ./curvatures ../data/goursat/goursat_025000.pts` | supplem Fig3 |K=50, L=200 | Mean: [-0.107, 0.345], Gaussian: [-0.034, 0.119] |
+| ` ./curvatures ../data/torus/torus_025000.pts` | supplem Fig4 |K=50, L=200 | Mean: [ 0.125, 0.32], Gaussian: [-0.125, 0.0625] |
+| ` ./curvatures ../data/anisotropic/goursat-filter.pts` | supplem Fig5 |K=50, L=200 | Mean: [-0.107, 0.345], Gaussian: [-0.034, 0.119] |
+| ` ./curvatures ../data/anisotropic/torus-filter.pts` | supplem Fig6 |K=50, L=200 | Mean: [ 0.125, 0.32], Gaussian: [-0.125, 0.0625] |
+| ` ./curvatures ../data/lidarSim/goursat-lidar.pts` | supplem Fig5 |K=50, L=200 | Mean: [-0.107, 0.345], Gaussian: [-0.034, 0.119] |
+| ` ./curvatures ../data/lidarSim/torus-lidar.pts` | supplem Fig6 |K=50, L=200 | Mean: [ 0.125, 0.32], Gaussian: [-0.125, 0.0625] |
+
+
 ## Examples
 
 | ![bearded man scan](images/bearded-H-AvgHexagram-20-s.png) |
