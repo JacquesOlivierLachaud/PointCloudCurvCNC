@@ -71,7 +71,7 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
   
 # Replicabe some paper results
 
-We provide additional datasets to be able to reproduce the paper results. To exactly get the paper visaul, for each interested curvature quantity, change polyscope's colormap from `viridis` to  `coolwarm` and use the clamping values given in the following table. 
+We provide additional datasets to be able to reproduce the paper results. To exactly get the paper visual after clicking on `Curvatures` button, for each interested curvature quantity, change polyscope's colormap from `viridis` to  `coolwarm` and use the clamping values given in the following table. 
 To specify the colormap min/max values, just CTRL-Click to the min/max text area for the selected curvature quantities.
 
 
