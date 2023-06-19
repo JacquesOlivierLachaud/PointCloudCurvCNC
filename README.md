@@ -69,9 +69,9 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
   - the total computation time of curvatures is displayed
   - l2 and loo errors are displayed for `Sphere` and `Torus` shape.
   
-# Replicabe some paper results
+# Replicate paper results
 
-We provide additional datasets to be able to reproduce the paper results. To exactly get the paper visual after clicking on `Curvatures` button, for each interested curvature quantity, change polyscope's colormap from `viridis` to  `coolwarm` and use the clamping values given in the following table. 
+We provide additional datasets to be able to reproduce the paper results. To exactly get the paper visual after clicking on `Curvatures` the button, for each interested curvature quantity, change polyscope's colormap from `viridis` to  `coolwarm` and use the clamping values given in the following table. 
 To specify the colormap min/max values, just CTRL-Click to the min/max text area for the selected curvature quantities.
 
 
