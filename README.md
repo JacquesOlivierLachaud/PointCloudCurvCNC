@@ -74,7 +74,7 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
 We provide additional datasets to be able to reproduce the paper results. To exactly get the paper visual after clicking on `Curvatures` the button, for each interested curvature quantity, change polyscope's colormap from `viridis` to  `coolwarm` and use the clamping values given in the following table (to specify the colormap min/max values, just CTRL-Click to the min/max text area for the selected curvature quantities).
 
 
-| Pointcloud | Paper figure | Params | curvature clamping range |
+| Pointcloud | Paper figure | Params | curvature colormap clamping ranges |
 | -----------| -------------| -------| ---------------- |
 | ` ./curvatures ../data/goursat/goursat_025000.pts` | Fig6 |K=50, L=100 | Mean: [-0.107, 0.345], Gaussian: [-0.034, 0.119] |
 | ` ./curvatures ../data/torus/torus_025000.pts` | supplem Fig2 |K=50, L=100 | Mean: [ 0.125, 0.32], Gaussian: [-0.125, 0.0625] |
