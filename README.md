@@ -60,7 +60,7 @@ The OBJ file should contained the vertices as `v x y z` and normal vectors as `v
 * Curvature computation
   - `Curvatures` computes all curvature information (mean, Gaussian, principal curvatures and directions.
   - parameter `K` is the chosen number of nearest neighbors
-  - parameter `T` is the chosen number of triangles (only for `Uniform` generation)
+  - parameter `L` is the chosen number of triangles (only for `Uniform` generation)
   - you may choose for triangle random generation methods among `Uniform`, `Independent`, `Hexagram`, `Avg-Hexagram` (see paper for details)
   - method `Avg-Hexagram` is the fastest, very accurate while staying robust to noise
   - parameter `W` balances between the normal to the points and the average normals of its neighbors to define the local sampling plane, 0.5 works well.

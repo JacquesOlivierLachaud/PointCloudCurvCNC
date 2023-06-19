@@ -528,7 +528,7 @@ void myCallback()
   if (ImGui::Button("InputFile"))    doGenerateFromFile();
   ImGui::Text("CNC Curvatures estimation");
   ImGui::SliderInt("K (#nearest neighbors)", &k_nn, 3, 100);
-  ImGui::SliderInt("T (max triangles)", &maxtriangles, 1, 1000);
+  ImGui::SliderInt("L (max triangles)", &maxtriangles, 1, 1000);
   if ( ImGui::RadioButton( "Uniform",
                            method == GenerationMethod::UniformGeneration) )
     method = GenerationMethod::UniformGeneration;
