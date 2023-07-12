@@ -5,7 +5,12 @@
 
 This repository provides an example application that implements the curvature estimators on oriented point clouds presented at [Symposium on Geometry Processing 2023, Genova, Italy, July 3-7](https://sgp2023.github.io):
 
-Jacques-Olivier Lachaud, David Coeurjolly, Céline Labart, Pascal Romon, Boris Thibert, **Lightweight Curvature Estimation on Point Clouds with Randomized Corrected Curvature Measures**, *Comput. Graph. Forum*, 42(5), 2023. To appear.
+Jacques-Olivier Lachaud, David Coeurjolly, Céline Labart, Pascal Romon, Boris Thibert, **Lightweight Curvature Estimation on Point Clouds with Randomized Corrected Curvature Measures**, *Comput. Graph. Forum*, 42(5), 2023.
+
+**Authors of the code**:
+
+* Jacques-Olivier Lachaud
+* David Coeurjolly
 
 ## Building
 
