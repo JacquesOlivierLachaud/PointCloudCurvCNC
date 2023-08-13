@@ -2,6 +2,7 @@
 
 # Lightweight Curvature Estimation on Point Clouds with Randomized Corrected Curvature Measures
 
+[![CI (linux/macOS)](https://github.com/JacquesOlivierLachaud/PointCloudCurvCNC/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/JacquesOlivierLachaud/PointCloudCurvCNC/actions/workflows/cmake-multi-platform.yml)
 
 This repository provides an example application that implements the curvature estimators on oriented point clouds presented at [Symposium on Geometry Processing 2023, Genova, Italy, July 3-7](https://sgp2023.github.io):
 
