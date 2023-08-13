@@ -1,4 +1,4 @@
-name: CI (linux/macOS/windows)
+name: CI (linux/macOS)
 
 on:
   push:
