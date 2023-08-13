@@ -319,8 +319,8 @@ generateTorus( int N, float R = 1.0, float r = 0.2 )
     u = u / glm::length( u ); // direction
     float theta = polyscope::randomUnit() * 2.0 * M_PI;
     glm::vec3 b = R * u;
-    glm::vec3 x = b + r * ( cos(theta) * u + sin(theta) * v );
-    glm::vec3 n = cos(theta) * u + sin(theta) * v;
+    glm::vec3 x = b + r * ( float(cos(theta)) * u + float(sin(theta)) * v );
+    glm::vec3 n = float(cos(theta)) * u + float( sin(theta)) * v;
     points.push_back( RealPoint( x.x, x.y, x.z ) );
     true_normals.push_back( RealVector( n.x, n.y, n.z ) );
     true_K1[ i ] = 1.0 / r;
